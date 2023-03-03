@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react';
-
+import { useState, useRef , useContext} from 'react';
+import AuthContext from '../store/auth-context';
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
   const emailref = useRef();
   const passwordref = useRef();
+
+  const authCtx = useContext(AuthContext)
+
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading,setisLoading]=useState(false)
 
@@ -52,7 +55,10 @@ const AuthForm = () => {
           console.log(data)
         })
       }
-    }).then(data=>{console.log(data)}).catch((error)=>{
+    }).then(data=>{
+      authCtx.login(data.idToken)
+    
+    }).catch((error)=>{
         alert(error.message)
     })
   }
@@ -77,7 +83,7 @@ const AuthForm = () => {
         </div>
         <div className={classes.actions}>
           <button>{isLogin ? 'login' : 'create account'  }</button>
-          {isLoading&&<p>sending request.........</p>}
+          {isLoading&&<p>sending request.....</p>}
           <button
             type='button'
             className={classes.toggle}
